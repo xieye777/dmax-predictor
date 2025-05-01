@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, send_file
 from predictor import load_model, predict
 import pandas as pd
@@ -59,7 +58,6 @@ def batch():
             file.save(file_path)
 
             try:
-                # 读取上传文件
                 if filename.endswith('.xlsx'):
                     df = pd.read_excel(file_path)
                 elif filename.endswith('.csv'):
@@ -70,7 +68,6 @@ def batch():
                 if 'Alloy' not in df.columns:
                     raise ValueError("文件必须包含名为 'Alloy' 的列")
 
-                # 执行预测
                 df['Dₘₐₓ (mm)'] = df['Alloy'].apply(
                     lambda s: predict(model, scaler, feature_columns, s)
                 )
@@ -92,17 +89,15 @@ def batch():
 
     return render_template("batch.html", table=results_df, error=error, chart_data=chart_data)
 
-# 下载批量预测结果
+# 下载结果
 @app.route('/download')
 def download():
     return send_file("预测结果.xlsx", as_attachment=True)
 
-# 下载历史记录文件（CSV）
 @app.route('/history')
 def download_history():
     return send_file(HISTORY_FILE, as_attachment=True)
 
-# 历史记录页面（HTML 表格展示）
 @app.route('/history/view')
 def view_history():
     try:
@@ -111,7 +106,7 @@ def view_history():
         df = pd.DataFrame(columns=["Time", "Alloy", "Dₘₐₓ (mm)", "Mode"])
     return render_template("history.html", records=df)
 
-# 启动 Flask 服务（Render 平台专用端口支持）
+# ✅ 正确监听 PORT 环境变量（Render 要求）
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
