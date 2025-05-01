@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, send_file
 from predictor import load_model, predict
 import pandas as pd
@@ -110,6 +111,7 @@ def view_history():
         df = pd.DataFrame(columns=["Time", "Alloy", "Dₘₐₓ (mm)", "Mode"])
     return render_template("history.html", records=df)
 
-# 启动 Flask 服务
+# 启动 Flask 服务（Render 平台专用端口支持）
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
