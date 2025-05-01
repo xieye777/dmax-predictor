@@ -1,1 +1,70 @@
-<!DOCTYPE html>...
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>非晶形成能预测</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f8ff, #ffffff);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .app-card {
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+    .btn-primary {
+      border-radius: 2rem;
+      font-weight: 600;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" href="/">非晶形成能预测系统</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="/">单个预测</a></li>
+        <li class="nav-item"><a class="nav-link" href="/batch">批量上传</a></li>
+        <li class="nav-item"><a class="nav-link" href="/history/view">历史记录</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container py-5">
+  <div class="card shadow app-card mx-auto" style="max-width: 600px;">
+    <h2 class="text-center mb-4 text-primary"><i class="fas fa-bolt me-2"></i>非晶形成能智能预测系统</h2>
+    <form method="post" novalidate>
+      <div class="mb-3">
+        <label for="composition" class="form-label">请输入合金成分</label>
+        <input type="text" class="form-control form-control-lg" id="composition" name="composition" placeholder="如 Fe80B10Si10" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="fas fa-bolt-lightning me-2"></i>开始预测
+        </button>
+      </div>
+    </form>
+    {% if result is not none %}
+    <div class="alert alert-success mt-4 text-center fs-5">
+      D<sub>max</sub> = <strong>{{ result | round(4) }} mm</strong>
+    </div>
+    {% elif error %}
+    <div class="alert alert-danger mt-4">{{ error }}</div>
+    {% endif %}
+    <a href="{{ url_for('download_history') }}" class="btn btn-outline-secondary mt-3">📄 下载历史记录（CSV）</a>
+    <a href="{{ url_for('view_history') }}" class="btn btn-outline-primary mt-3">📊 查看历史记录页面</a>
+  </div>
+  <footer>&copy; 2025 轻合金与非晶材料创新团队</footer>
+</div>
+</body>
+</html>
