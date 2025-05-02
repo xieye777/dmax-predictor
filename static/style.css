@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: linear-gradient(135deg, #e0f7ff, #ffffff);
+  margin: 0;
+  padding: 0;
+}
+
+.app-card {
+  border-radius: 1rem;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  max-width: 600px;
+}
+
+.btn-predict {
+  background: linear-gradient(to right, #0d6efd, #339af0);
+  color: white;
+  font-weight: bold;
+  border-radius: 2rem;
+  border: none;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.btn-predict:hover {
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.4);
+}
+
+.bg-gradient {
+  background: linear-gradient(to right, #0d6efd, #6ea8fe);
+}
+
+.navbar .nav-link {
+  color: white !important;
+  font-weight: 500;
+}
+
+.navbar .nav-link.active {
+  text-decoration: underline;
+}
