@@ -13,7 +13,7 @@ app.secret_key = 'your-secret-key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-USER_DB = "/tmp/users.db"  # ✅ Render 可写路径
+USER_DB = "/tmp/users.db"
 
 def init_db():
     conn = sqlite3.connect(USER_DB)
@@ -149,6 +149,8 @@ def batch():
     user_id = g.user['id']
     HISTORY_FILE = f"history_user_{user_id}.csv"
 
+    failed_rows = []
+
     if request.method == 'POST':
         file = request.files.get('file')
         if not file:
@@ -169,24 +171,33 @@ def batch():
                 if 'Alloy' not in df.columns:
                     raise ValueError("文件必须包含名为 'Alloy' 的列")
 
-                df['Dₘₐₓ (mm)'] = df['Alloy'].apply(
-                    lambda s: predict(model, scaler, feature_columns, s)
-                )
-                results_df = df
-                chart_data = df['Dₘₐₓ (mm)'].tolist()
-                df.to_excel("预测结果.xlsx", index=False)
+                predictions = []
+                for i, row in df.iterrows():
+                    try:
+                        val = predict(model, scaler, feature_columns, row['Alloy'])
+                        predictions.append(val)
+                    except Exception as e:
+                        failed_rows.append((i, row['Alloy'], str(e)))
+                        predictions.append(None)
+
+                df["Dₘₐₓ (mm)"] = predictions
+                results_df = df[df["Dₘₐₓ (mm)"].notna()]
+                chart_data = results_df["Dₘₐₓ (mm)"].tolist()
+                results_df.to_excel("预测结果.xlsx", index=False)
 
                 batch_records = pd.DataFrame({
                     "Time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "Alloy": df['Alloy'],
-                    "Dₘₐₓ (mm)": df['Dₘₐₓ (mm)'].round(4),
+                    "Alloy": results_df['Alloy'],
+                    "Dₘₐₓ (mm)": results_df['Dₘₐₓ (mm)'].round(4),
                     "Mode": "batch"
                 })
                 batch_records.to_csv(HISTORY_FILE, mode='a', header=not os.path.exists(HISTORY_FILE), index=False)
 
+                if failed_rows:
+                    error = f"部分合金无法预测，共 {len(failed_rows)} 项，例如：{failed_rows[0][:2]}"
+
             except Exception as e:
                 error = f"处理文件失败：{str(e)}"
-                print("批量上传出错：", e)  # ✅ 打印错误信息用于调试
 
     return render_template("batch.html", table=results_df, error=error, chart_data=chart_data)
 
