@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, send_file, redirect, url_for, session, g
 from predictor import load_model, predict
 import pandas as pd
@@ -13,7 +12,24 @@ app.secret_key = 'your-secret-key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-USER_DB = "users.db"
+USER_DB = "/tmp/users.db"  # ✅ Render 可写路径
+
+# 初始化数据库表
+def init_db():
+    conn = sqlite3.connect(USER_DB)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()  # ✅ 启动时自动建表
 
 def get_db():
     conn = sqlite3.connect(USER_DB)
