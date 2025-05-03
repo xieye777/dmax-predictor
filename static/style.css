@@ -1,12 +1,10 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
 
 body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(to right, #f8fbff, #eef5ff);
+  font-family: 'Noto Sans SC', sans-serif;
+  background: linear-gradient(135deg, #e0f7ff, #ffffff);
   margin: 0;
   padding: 0;
-  color: #2d2d2d;
 }
 
 .app-card {
@@ -14,65 +12,75 @@ body {
   padding: 2.5rem;
   background-color: #ffffff;
   max-width: 600px;
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
 }
 
 .btn-predict {
-  background: linear-gradient(to right, #3b82f6, #2563eb);
+  background: linear-gradient(to right, #0d6efd, #339af0);
   color: white;
   font-weight: bold;
   border-radius: 2rem;
   border: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .btn-predict:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 0 15px rgba(13, 110, 253, 0.4);
+}
+
+.bg-gradient {
+  background: linear-gradient(to right, #0d6efd, #6ea8fe);
 }
 
 .navbar {
-  background-color: rgba(30, 41, 59, 0.85) !important;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #2c3e50; /* 深色系背景 */
 }
 
 .navbar .nav-link {
-  color: #ffffff !important;
+  color: #ecf0f1 !important; /* 轻灰色文字 */
   font-weight: 500;
-  transition: color 0.3s;
-}
-
-.navbar .nav-link:hover {
-  color: #60a5fa !important;
 }
 
 .navbar .nav-link.active {
-  color: #93c5fd !important;
   text-decoration: underline;
+  color: #3498db;
 }
 
 .navbar-brand {
-  color: #ffffff !important;
+  color: #ecf0f1 !important; /* 轻灰色文字 */
+}
+
+.navbar .nav-link:hover {
+  color: #3498db;
+}
+
+/* Enhanced card section styles */
+
+.card-header {
   font-weight: 600;
-  font-size: 1.2rem;
+  background-color: #f0f4f8;
+  border-bottom: 1px solid #e0e0e0;
+  color: #1e293b;
+  font-size: 1rem;
 }
 
-.nav-link.disabled {
-  color: #cccccc !important;
-  pointer-events: none;
+.card-body {
+  padding: 1.5rem;
+  line-height: 1.7;
 }
 
-input:focus, textarea:focus, select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 0.15rem rgba(59, 130, 246, 0.3);
+.card + .card {
+  margin-top: 1.5rem;
 }
 
-footer {
-  margin-top: 3rem;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.85rem;
+.card i {
+  margin-right: 0.5rem;
+  color: #3b82f6;
+}
+
+pre {
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #e2e8f0;
 }
