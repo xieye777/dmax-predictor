@@ -1,6 +1,5 @@
-
 from flask import Flask, render_template, request, send_file, redirect, url_for, session, g
-from predictor import load_model, predict
+from predictor import load_model, predict, parse_composition  # 引入 predictor.py 中的相关函数
 import pandas as pd
 import os
 from werkzeug.utils import secure_filename
@@ -13,23 +12,7 @@ app.secret_key = 'your-secret-key'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-USER_DB = "/tmp/users.db"
-
-def init_db():
-    conn = sqlite3.connect(USER_DB)
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    conn.commit()
-    conn.close()
-
-init_db()
+USER_DB = "users.db"
 
 def get_db():
     conn = sqlite3.connect(USER_DB)
@@ -116,6 +99,7 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+# 加载模型
 model, scaler, feature_columns = load_model()
 
 @app.route('/', methods=['GET', 'POST'])
@@ -130,12 +114,14 @@ def index():
         composition = request.form.get('composition')
         try:
             result = predict(model, scaler, feature_columns, composition)
+
             pd.DataFrame([{
                 "Time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "Alloy": composition,
                 "Dₘₐₓ (mm)": round(result, 4),
                 "Mode": "single"
             }]).to_csv(HISTORY_FILE, mode='a', header=not os.path.exists(HISTORY_FILE), index=False)
+
         except Exception as e:
             error = str(e)
     return render_template('index.html', result=result, error=error)
@@ -148,8 +134,7 @@ def batch():
     chart_data = []
     user_id = g.user['id']
     HISTORY_FILE = f"history_user_{user_id}.csv"
-
-    failed_rows = []
+    failed_rows = []  # 用于记录失败的行
 
     if request.method == 'POST':
         file = request.files.get('file')
@@ -174,17 +159,20 @@ def batch():
                 predictions = []
                 for i, row in df.iterrows():
                     try:
+                        # 逐行调用 predict
                         val = predict(model, scaler, feature_columns, row['Alloy'])
                         predictions.append(val)
                     except Exception as e:
+                        # 如果某行预测失败，记录错误
                         failed_rows.append((i, row['Alloy'], str(e)))
                         predictions.append(None)
 
                 df["Dₘₐₓ (mm)"] = predictions
-                results_df = df[df["Dₘₐₓ (mm)"].notna()]
+                results_df = df[df["Dₘₐₓ (mm)"].notna()]  # 只保留成功预测的行
                 chart_data = results_df["Dₘₐₓ (mm)"].tolist()
                 results_df.to_excel("预测结果.xlsx", index=False)
 
+                # 将批量记录保存到历史文件
                 batch_records = pd.DataFrame({
                     "Time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "Alloy": results_df['Alloy'],
