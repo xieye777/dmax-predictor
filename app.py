@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, send_file, redirect, url_for, session, g
 from predictor import load_model, predict
 import pandas as pd
@@ -14,7 +15,6 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 USER_DB = "/tmp/users.db"  # ✅ Render 可写路径
 
-# 初始化数据库表
 def init_db():
     conn = sqlite3.connect(USER_DB)
     cursor = conn.cursor()
@@ -29,7 +29,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-init_db()  # ✅ 启动时自动建表
+init_db()
 
 def get_db():
     conn = sqlite3.connect(USER_DB)
@@ -116,7 +116,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# 加载模型
 model, scaler, feature_columns = load_model()
 
 @app.route('/', methods=['GET', 'POST'])
@@ -131,14 +130,12 @@ def index():
         composition = request.form.get('composition')
         try:
             result = predict(model, scaler, feature_columns, composition)
-
             pd.DataFrame([{
                 "Time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "Alloy": composition,
                 "Dₘₐₓ (mm)": round(result, 4),
                 "Mode": "single"
             }]).to_csv(HISTORY_FILE, mode='a', header=not os.path.exists(HISTORY_FILE), index=False)
-
         except Exception as e:
             error = str(e)
     return render_template('index.html', result=result, error=error)
@@ -189,6 +186,7 @@ def batch():
 
             except Exception as e:
                 error = f"处理文件失败：{str(e)}"
+                print("批量上传出错：", e)  # ✅ 打印错误信息用于调试
 
     return render_template("batch.html", table=results_df, error=error, chart_data=chart_data)
 
