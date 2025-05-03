@@ -52,3 +52,22 @@ body {
 .navbar .nav-link:hover {
   color: #3498db;
 }
+/* 用户状态：禁用邮箱显示 */
+.nav-link.disabled {
+  color: #bbb !important;
+  pointer-events: none;
+}
+
+/* 登录注册卡片样式 */
+.card-auth {
+  border-radius: 1rem;
+  padding: 2rem;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* 输入框聚焦效果 */
+input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}

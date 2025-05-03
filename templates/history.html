@@ -14,6 +14,14 @@
   <div class="container">
     <a class="navbar-brand fw-bold text-white" href="/">非晶形成能预测系统</a>
     <ul class="navbar-nav ms-auto">
+      {% if g.user %}
+        <li class="nav-item"><span class="nav-link disabled">👤 {{ g.user['email'] }}</span></li>
+        <li class="nav-item"><a class="nav-link" href="/logout">退出</a></li>
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="/login">登录</a></li>
+        <li class="nav-item"><a class="nav-link" href="/register">注册</a></li>
+      {% endif %}
+
       <li class="nav-item"><a class="nav-link" href="/">单个预测</a></li>
       <li class="nav-item"><a class="nav-link" href="/batch">批量上传</a></li>
       <li class="nav-item"><a class="nav-link active" href="/history/view">历史记录</a></li>
