@@ -29,8 +29,8 @@
 <!-- Hero Banner -->
 <section class="py-5 text-center bg-gradient-light">
   <div class="container">
-    <h1 class="display-5 fw-bold mb-3">非晶合金 D<sub>max</sub> 智能预测系统</h1>
-    <p class="lead mb-4">基于机器学习的 D<sub>max</sub> 快速预测工具，助力非晶材料研发。</p>
+    <h1 class="display-5 fw-bold mb-3">非晶合金 形成能智能预测系统</h1>
+    <p class="lead mb-4">基于机器学习的 形成能快速预测工具，助力非晶材料研发。</p>
     <a href="#predict" class="btn btn-primary btn-lg px-4 shadow-sm"><i class="fas fa-bolt me-2"></i>立即开始预测</a>
   </div>
 </section>
@@ -43,7 +43,7 @@
         <div class="card-body">
           <i class="fas fa-flask fa-2x text-primary mb-3"></i>
           <h5 class="fw-semibold">单个预测</h5>
-          <p class="small text-muted">输入一个合金成分，预测最大直径。</p>
+          <p class="small text-muted">输入一个合金成分，预测形成能。</p>
           <a href="#predict" class="btn btn-outline-primary btn-sm mt-2">预测入口</a>
         </div>
       </div>
@@ -78,7 +78,7 @@
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white fw-semibold"><i class="fas fa-brain me-2"></i>模型说明</div>
         <div class="card-body small text-muted">
-          本系统基于随机森林构建非晶合金 D<sub>max</sub> 模型，结合特征选择与 SHAP 分析提升预测性能。训练数据覆盖 300+ 合金，具备良好泛化能力。
+          本系统基于随机森林构建非晶合金 形成能模型，结合特征选择与 SHAP 分析提升预测性能。训练数据覆盖 300+ 合金，具备良好泛化能力。
         </div>
       </div>
     </div>
@@ -115,7 +115,7 @@ Al39Co17Ce22La22</pre>
 <section id="predict" class="py-5 bg-light">
   <div class="container">
     <div class="card mx-auto shadow-sm p-4" style="max-width: 600px;">
-      <h4 class="text-center mb-4 text-primary"><i class="fas fa-microscope me-2"></i>合金成分预测 D<sub>max</sub></h4>
+      <h4 class="text-center mb-4 text-primary"><i class="fas fa-microscope me-2"></i>合金形成能预测</h4>
       <form method="post">
         <input type="text" name="composition" id="composition" class="form-control form-control-lg mb-3" placeholder="如 Fe80B10Si10" required>
         <div class="d-grid">
