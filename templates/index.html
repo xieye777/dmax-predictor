@@ -11,7 +11,6 @@
 </head>
 <body>
 
-<!-- 顶部导航 -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-gradient shadow-sm">
   <div class="container">
     <a class="navbar-brand" href="/">非晶预测平台</a>
@@ -27,7 +26,7 @@
   </div>
 </nav>
 
-<!-- Hero 介绍区域 -->
+<!-- Hero -->
 <section class="py-5 bg-light text-center">
   <div class="container">
     <h1 class="display-5 fw-bold">非晶合金 Dₘₐₓ 智能预测系统</h1>
@@ -36,7 +35,7 @@
   </div>
 </section>
 
-<!-- 三个功能入口卡片 -->
+<!-- 功能入口卡片 -->
 <section class="container py-5">
   <div class="row text-center">
     <div class="col-md-4 mb-4">
@@ -72,7 +71,56 @@
   </div>
 </section>
 
-<!-- 预测主模块 -->
+<!-- 模型说明 -->
+<section class="container pb-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <i class="fas fa-brain me-2"></i>模型说明
+    </div>
+    <div class="card-body">
+      <p>本系统基于随机森林（Random Forest）构建非晶合金 Dₘₐₓ 预测模型。通过模型剪枝、特征选择与 SHAP 可解释性分析等方法，有效提升了预测准确性。</p>
+      <p>训练数据来源于已公开的 300+ 合金样本，模型经过超参数优化，具备较好的泛化能力与实际应用潜力。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 使用说明 -->
+<section class="container pb-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white">
+      <i class="fas fa-book me-2"></i>使用说明
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><strong>单个成分预测</strong>：在下方输入框中输入如 <code>Fe80B10Si10</code> 形式的合金成分。</li>
+        <li><strong>批量上传预测</strong>：上传 .csv 或 .xlsx 文件，需包含 <code>Alloy</code> 列，如：</li>
+      </ul>
+      <pre>Alloy
+Fe80B10Si10
+Al39Co17Ce22La22</pre>
+      <p><strong>历史记录</strong>：自动记录每次预测数据，支持下载。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 推荐样例 -->
+<section class="container pb-4">
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-success text-white">
+      <i class="fas fa-lightbulb me-2"></i>推荐样例
+    </div>
+    <div class="card-body">
+      <p>点击以下任一成分将自动填入输入框：</p>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-primary btn-sm example-btn">Fe80B10Si10</button>
+        <button class="btn btn-outline-primary btn-sm example-btn">Al39Co17Ce22La22</button>
+        <button class="btn btn-outline-primary btn-sm example-btn">Zr55Cu30Ni10Al5</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 主预测区 -->
 <section id="predict" class="py-5 bg-white">
   <div class="container">
     <div class="card app-card mx-auto">
@@ -103,8 +151,17 @@
 
 <!-- 页脚 -->
 <footer class="text-center py-4 text-muted small">
-  &copy; 2025 非晶材料预测系统 | 由轻合金与非晶材料团队开发
+  &copy; 2025 非晶材料预测系统 | 轻合金与非晶材料团队
 </footer>
+
+<script>
+document.querySelectorAll(".example-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.getElementById("composition").value = btn.textContent;
+    window.scrollTo({ top: document.getElementById("predict").offsetTop - 80, behavior: 'smooth' });
+  });
+});
+</script>
 
 </body>
 </html>
