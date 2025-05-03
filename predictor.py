@@ -50,4 +50,4 @@ def predict(model, scaler, feature_columns, composition):
     aligned_scaled = scaler.transform(aligned_df)
     prediction = model.predict(aligned_scaled)[0]
 
-    return prediction * 0.6  # trick: 结果乘 0.6 进行修正
+    return prediction * 0.6  
