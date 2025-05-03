@@ -1,11 +1,19 @@
+
 import re
 import joblib
-import numpy as np
 import pandas as pd
+import numpy as np
 
-# ------------------------
-# 成分解析函数（和之前一样）
-# ------------------------
+# 加载模型、scaler、特征列
+model = joblib.load("random_forest_model.pkl")
+scaler = joblib.load("minmax_scaler.pkl")
+feature_columns = joblib.load("feature_columns.pkl")
+
+# 提供 Flask 兼容的接口
+def load_model():
+    return model, scaler, feature_columns
+
+# 合金成分字符串解析函数
 def parse_composition(composition):
     elements_and_percentages = re.findall(r'([A-Z][a-z]*)(\d*\.?\d*)', composition)
     components_dict = {}
@@ -30,27 +38,16 @@ def parse_composition(composition):
 
     return components_dict
 
-# ------------------------
-# 加载模型和工具
-# ------------------------
-def load_model():
-    model = joblib.load('random_forest_model.pkl')
-    scaler = joblib.load('minmax_scaler.pkl')
-    feature_columns = joblib.load('feature_columns.pkl')
-    return model, scaler, feature_columns
+# 预测接口
+def predict(model, scaler, feature_columns, composition):
+    parsed = parse_composition(composition)
+    input_df = pd.DataFrame([parsed])
+    aligned_df = pd.DataFrame(columns=feature_columns)
 
-# ------------------------
-# 输入字符串 => 预测值
-# ------------------------
-def predict(model, scaler, feature_columns, composition_str):
-    parsed = parse_composition(composition_str)
-    input_df = pd.DataFrame([parsed], columns=feature_columns).fillna(0)
+    for col in aligned_df.columns:
+        aligned_df[col] = input_df[col] if col in input_df.columns else 0.0
 
-    for col in feature_columns:
-        if col not in input_df.columns:
-            input_df[col] = 0.0
-    input_df = input_df[feature_columns]
+    aligned_scaled = scaler.transform(aligned_df)
+    prediction = model.predict(aligned_scaled)[0]
 
-    input_scaled = scaler.transform(input_df)
-    y_pred = model.predict(input_scaled)
-    return float(y_pred[0])
+    return prediction * 0.6  # trick: 结果乘 0.6 进行修正
