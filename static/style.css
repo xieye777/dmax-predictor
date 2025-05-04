@@ -22,7 +22,11 @@ body {
 }
 
 .bg-gradient-light {
-  background: linear-gradient(to right, #f8fbff, #eef5ff);
+  background: linear-gradient(135deg, #f5f9ff, #ffffff);
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  background-blend-mode: soft-light;
 }
 
 .card {
